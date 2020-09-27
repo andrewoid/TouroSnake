@@ -1,9 +1,8 @@
 package touro.snake;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static touro.snake.Direction.*;
 
 /**
  * Model object that represents the Snake and allows it to grow, turn and move.
@@ -14,12 +13,11 @@ public class Snake {
 
     private final List<Square> squares = new ArrayList<>();
 
-    private final SnakeHeadStateMachine snakeHeadStateMachine;
-
     private boolean grow = false;
 
-    public Snake(SnakeHeadStateMachine snakeHeadStateMachine) {
-        this.snakeHeadStateMachine = snakeHeadStateMachine;
+    private int degrees = 180;
+
+    public Snake() {
         createSnake();
     }
 
@@ -30,7 +28,7 @@ public class Snake {
         int x = Garden.WIDTH / 2;
         int y = Garden.HEIGHT / 2;
         for (int i = 0; i < START_LENGTH; i++) {
-            squares.add(new Square(x + i, y));
+            squares.add(new Square((x + i), y));
         }
     }
 
@@ -45,10 +43,6 @@ public class Snake {
         setGrow(true);
     }
 
-    public void turnTo(Direction newDirection) {
-        snakeHeadStateMachine.turnTo(newDirection);
-    }
-
     public Square getHead() {
         return squares.get(0);
     }
@@ -58,33 +52,18 @@ public class Snake {
      */
     public void move() {
 
-        //get direction
-        Direction direction = snakeHeadStateMachine.getDirection();
-
         //save head position in variable previous square
         Square previousHead = getHead();
         int x = previousHead.getX();
         int y = previousHead.getY();
 
-        //move head one square in proper direction (assumes origin is on the top left corner)
+        double radians = Math.toRadians(degrees);
+
         Square newSquare;
-        switch (direction) {
-            case North:
-                newSquare = new Square(x, y - 1);
-                break;
-            case East:
-                newSquare = new Square(x + 1, y);
-                break;
-            case South:
-                newSquare = new Square(x, y + 1);
-                break;
-            case West:
-                newSquare = new Square(x - 1, y);
-                break;
-            default:
-                System.out.println("ERROR: Direction is not valid or is null");
-                return;
-        }
+        int newX = (int) Math.round(x + Math.cos(radians) * 1000);
+        int newY = (int) Math.round(y + Math.sin(radians) * 1000);
+        newSquare = new Square( newX, newY);
+
         squares.add(0, newSquare);
         if (!getGrow()) {
             squares.remove(squares.size() - 1);
@@ -100,7 +79,19 @@ public class Snake {
      * @return true if the Food intersects with the Snake, otherwise false.
      */
     public boolean contains(Food food) {
-        return squares.contains(food);
+        if(food == null) {
+            return false;
+        }
+        int cellsize = GardenView.CELL_SIZE;
+        int headX = getHead().getX() / 100;
+        int headY = getHead().getY() / 100;
+        Rectangle headSquare = new Rectangle(headX,headY,cellsize, cellsize);
+        int foodX = food.getX() / 100;
+        int foodY = food.getY() / 100;
+        Rectangle foodSquare = new Rectangle(foodX, foodY, cellsize, cellsize);
+        return headSquare.intersects(foodSquare);
+
+
     }
 
     /**
@@ -140,4 +131,9 @@ public class Snake {
     public void setGrow(boolean grow) {
         this.grow = grow;
     }
+
+    public int getDegrees() { return degrees; }
+
+    public void setDegrees(int degrees) { this.degrees = degrees; }
+
 }

@@ -41,9 +41,9 @@ public class GardenViewTest {
         Graphics g = mock(Graphics.class);
 
         List<Square> squares = List.of(
-                new Square(50, 20),
-                new Square(51, 21),
-                new Square(52, 22)
+                new Square(50000, 20000),
+                new Square(51000, 21000),
+                new Square(52000, 22000)
         );
 
         when(garden.getSnake()).thenReturn(snake); //getting the snake from the garden
@@ -53,9 +53,9 @@ public class GardenViewTest {
         view.paintSnake(g);
 
         //then  --checking that the cells (for which the coordinates are found in the list created above) are filled
-        verify(g).fillRect(50 * CELL_SIZE, 20 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-        verify(g).fillRect(51 * CELL_SIZE, 21 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-        verify(g).fillRect(52 * CELL_SIZE, 22 * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        verify(g).fillRect(50000 /100, 20000 /100, CELL_SIZE, CELL_SIZE);
+        verify(g).fillRect(51000 /100, 21000 /100, CELL_SIZE, CELL_SIZE);
+        verify(g).fillRect(52000 /100, 22000 /100, CELL_SIZE, CELL_SIZE);
     }
 
 
@@ -68,10 +68,10 @@ public class GardenViewTest {
         when(garden.getFood()).thenReturn(mock(Food.class));
 
         Food food = garden.getFood();
-        when(food.getX()).thenReturn(5);
-        when(food.getY()).thenReturn(10);
-        int x = food.getX() * GardenView.CELL_SIZE;
-        int y = food.getY() * GardenView.CELL_SIZE;
+        when(food.getX()).thenReturn(5000);
+        when(food.getY()).thenReturn(10000);
+        int x = food.getX()/100;
+        int y = food.getY()/100;
 
         Graphics g = mock(Graphics.class);
 

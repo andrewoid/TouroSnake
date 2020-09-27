@@ -19,16 +19,16 @@ public class SnakeKeyListener extends KeyAdapter {
         super.keyPressed(e);
         switch(e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                snake.turnTo(Direction.West);
-                break;
-            case KeyEvent.VK_RIGHT:
-                snake.turnTo(Direction.East);
+                snake.setDegrees(snake.getDegrees() - 5);
                 break;
             case KeyEvent.VK_DOWN:
-                snake.turnTo(Direction.South);
+                snake.setDegrees(snake.getDegrees() - 5);
+                break;
+            case KeyEvent.VK_RIGHT:
+                snake.setDegrees(snake.getDegrees() + 5);
                 break;
             case KeyEvent.VK_UP:
-                snake.turnTo(Direction.North);
+                snake.setDegrees(snake.getDegrees() + 5);
                 break;
         }
     }

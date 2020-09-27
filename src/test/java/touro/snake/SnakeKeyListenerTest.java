@@ -21,7 +21,8 @@ public class SnakeKeyListenerTest {
         snakeKeyListener.keyPressed(keyEvent);
 
         //then
-        verify(snake).turnTo(Direction.West);
+        verify(snake).setDegrees(-5);
+        verify(snake).getDegrees();
         verifyNoMoreInteractions(snake);
     }
 
@@ -37,7 +38,8 @@ public class SnakeKeyListenerTest {
         snakeKeyListener.keyPressed(keyEvent);
 
         //then
-        verify(snake).turnTo(Direction.East);
+        verify(snake).setDegrees(5);
+        verify(snake).getDegrees();
         verifyNoMoreInteractions(snake);
     }
 
@@ -53,7 +55,8 @@ public class SnakeKeyListenerTest {
         snakeKeyListener.keyPressed(keyEvent);
 
         //then
-        verify(snake).turnTo(Direction.North);
+        verify(snake).setDegrees(5);
+        verify(snake).getDegrees();
         verifyNoMoreInteractions(snake);
     }
 
@@ -69,7 +72,8 @@ public class SnakeKeyListenerTest {
         snakeKeyListener.keyPressed(keyEvent);
 
         //then
-        verify(snake).turnTo(Direction.South);
+        verify(snake).setDegrees(-5);
+        verify(snake).getDegrees();
         verifyNoMoreInteractions(snake);
     }
 
