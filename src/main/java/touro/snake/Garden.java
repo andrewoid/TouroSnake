@@ -17,13 +17,13 @@ public class Garden {
 
     private final Snake snake;
     private final FoodFactory foodFactory;
+    private SnakeEventListener listener;
     private Food food;
-    private Clip clip;
 
-    public Garden(Snake snake, FoodFactory foodFactory, Clip clip) {
+    public Garden(Snake snake, FoodFactory foodFactory, SnakeEventListener listener) {
         this.snake = snake;
         this.foodFactory = foodFactory;
-        this.clip = clip;
+        this.listener = listener;
     }
 
     public Snake getSnake() {
@@ -59,6 +59,7 @@ public class Garden {
 
         //if collides with wall or self
         if (!snake.inBounds() || snake.eatsSelf()) {
+            listener.onDead();
             return false;
         }
 
@@ -67,7 +68,7 @@ public class Garden {
             //add square to snake
             snake.grow();
             //make noise
-            playSound();
+            listener.onEatFood();
             //remove food
             food = null;
         }
@@ -88,23 +89,4 @@ public class Garden {
             }
         }
     }
-
-    /**
-     * Plays sound from .wav file found in resources folder
-     */
-    private void playSound() {
-        try {
-            clip.setMicrosecondPosition(0); //restart clip
-            clip.start();
-
-        } catch (Exception e) {
-            System.out.println("Error found when trying to play EatNoise");
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-
 }

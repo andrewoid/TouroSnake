@@ -12,6 +12,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class GardenTest {
+    private Snake snake = mock(Snake.class);
+    private FoodFactory foodFactory = mock(FoodFactory.class);
+    private SnakeEventListener listener = mock(SnakeEventListener.class);
 
     @Test
     public void moveSnake() {
@@ -21,10 +24,7 @@ public class GardenTest {
          */
         //given
         SnakeStrategy strategy = mock(SnakeStrategy.class);
-        Snake snake = mock(Snake.class);
-        FoodFactory foodFactory = mock(FoodFactory.class);
-        Clip clip = mock(Clip.class);
-        Garden garden = new Garden(snake, foodFactory, clip);
+        Garden garden = new Garden(snake, foodFactory, listener);
 
         doReturn(strategy).when(snake).getStrategy();
         doReturn(true).when(snake).inBounds();
@@ -41,10 +41,7 @@ public class GardenTest {
     public void createFoodIfNecessary() {
 
         //given
-        Snake snake = mock(Snake.class);
-        FoodFactory foodFactory = mock(FoodFactory.class);
-        Clip clip = mock(Clip.class);
-        Garden garden = new Garden(snake, foodFactory, clip);
+        Garden garden = new Garden(snake, foodFactory, listener);
         when(foodFactory.newInstance()).thenReturn(mock(Food.class));
 
         //when
@@ -56,16 +53,13 @@ public class GardenTest {
     }
 
     @Test
-    public void playSound() {
+    public void onEatFood() {
         //given
-
         SnakeStrategy strategy = mock(SnakeStrategy.class);
-        Snake snake = mock(Snake.class);
-        FoodFactory foodFactory = mock(FoodFactory.class);
         Food food = new Food(50, 20);
         when(foodFactory.newInstance()).thenReturn(food);
-        Clip clip = mock(Clip.class);
-        Garden garden = new Garden(snake, foodFactory, clip);
+        SnakeEventListener listener = mock(SnakeEventListener.class);
+        Garden garden = new Garden(snake, foodFactory, listener);
         List<Square> squares = List.of(new Square(50, 20));
 
         doReturn(strategy).when(snake).getStrategy();
@@ -78,8 +72,6 @@ public class GardenTest {
         garden.moveSnake();
 
         //then
-        verify(clip).start();
-
-
+        verify(listener).onEatFood();
     }
 }

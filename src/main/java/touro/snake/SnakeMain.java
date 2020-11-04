@@ -1,6 +1,8 @@
 package touro.snake;
 
 import touro.snake.strategy.BlankStrategy;
+import touro.snake.strategy.astar.schwimmer.AStarStrategy;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,14 +15,34 @@ public class SnakeMain {
         // Set up all class dependencies here.
 
         SnakeHeadStateMachine snakeHeadStateMachine = new SnakeHeadStateMachine(Direction.West);
-        Snake snake = new Snake(snakeHeadStateMachine, new BlankStrategy());
+        Snake snake = new Snake(snakeHeadStateMachine, new AStarStrategy());
         FoodFactory foodFactory = new FoodFactory();
         try {
             InputStream inputStream = Garden.class.getClassLoader().getResourceAsStream("EatNoise.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
-            Garden garden = new Garden(snake, foodFactory, clip);
+
+            SnakeEventListener listener = new SnakeEventListener() {
+                @Override
+                public void onEatFood() {
+                        try {
+                            clip.setMicrosecondPosition(0); //restart clip
+                            clip.start();
+
+                        } catch (Exception e) {
+                            System.out.println("Error found when trying to play EatNoise");
+                            e.printStackTrace();
+                        }
+                }
+
+                @Override
+                public void onDead() {
+
+                }
+            };
+
+            Garden garden = new Garden(snake, foodFactory, listener);
             GardenView gardenView = new GardenView(garden);
             SnakeKeyListener snakeKeyListener = new SnakeKeyListener(snake);
 
