@@ -6,7 +6,7 @@ group 'touro.snake'
 version '1.0-SNAPSHOT'
 
 // Latest version of Java
-sourceCompatibility = 14
+sourceCompatibility = 11
 
 repositories {
     mavenCentral()
